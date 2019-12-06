@@ -123,7 +123,8 @@ extern const struct adsp_reg_desc adsp_bxt_shim_map[BXT_SHIM_REGS];
 extern const struct adsp_reg_desc adsp_sue_shim_map[SUE_SHIM_REGS];
 #define CNL_SHIM_REGS   25
 extern const struct adsp_reg_desc adsp_cnl_shim_map[CNL_SHIM_REGS];
-
+#define IMX8_SHIM_REGS  25
+extern const struct adsp_reg_desc adsp_imx8_shim_map[IMX8_SHIM_REGS];
 
 #if LOG_SHIM
 
@@ -295,7 +296,7 @@ static inline void log_area_write(struct adsp_log *log,
 			else if (class == TRACE_CLASS_WFI)
 				trace = "wfi";
 			else {
-				log_print(log, " 0x%x = \t0x%8.8lx \t(%8.8ld) \t|%c%c%c%c|\n",
+				log_print(log, "0x%x = \t0x%8.8lx \t(%8.8ld) \t|%c%c%c%c|\n",
 				(unsigned int)addr, val, val,
 				log_get_char(val, 3), log_get_char(val, 2),
 				log_get_char(val, 1), log_get_char(val, 0));
