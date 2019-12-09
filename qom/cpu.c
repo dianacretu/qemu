@@ -318,12 +318,11 @@ static bool cpu_common_has_work(CPUState *cs)
 ObjectClass *cpu_class_by_name(const char *typename, const char *cpu_model)
 {
     CPUClass *cc;
-
     if (!cpu_model) {
         return NULL;
     }
     cc = CPU_CLASS(object_class_by_name(typename));
-
+    printf("MODELUL CPUULUI ESTE %s.\n", cpu_model);
     return cc->class_by_name(cpu_model);
 }
 

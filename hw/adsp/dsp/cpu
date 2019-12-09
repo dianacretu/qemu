@@ -1,0 +1,237 @@
+byt-shim.c:#include "hw/audio/adsp-dev.h"
+byt-shim.c:        (qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) - adsp->timer[0].start) /
+byt-shim.c:        (1000000 / adsp->timer[0].clk_kHz);
+byt-shim.c:    timer_mod(adsp->timer[0].timer, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) +
+byt-shim.c:                1000000, adsp->timer[0].clk_kHz));
+byt-shim.c:    switch (adsp->pmc_cmd) {
+byt-shim.c:    log_text(adsp->log, LOG_IRQ_BUSY,
+byt-shim.c:        "irq: SC send busy interrupt 0x%x\n", adsp->pmc_cmd);
+byt-shim.c:    adsp_set_lvl1_irq(adsp, adsp->desc->pmc_irq, 1);
+byt-shim.c:    adsp_set_lvl1_irq(adsp, adsp->desc->ext_timer_irq, 1);
+byt-shim.c:        (qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) - adsp->timer[0].start) /
+byt-shim.c:            (1000000 / adsp->timer[0].clk_kHz);
+byt-shim.c:    log_read(adsp->log, space, addr, size,
+byt-shim.c:    log_write(adsp->log, space, addr, val, size,
+byt-shim.c:            log_text(adsp->log, LOG_CPU_RESET,
+byt-shim.c:            cpu_reset(CPU(adsp->xtensa[0]->cpu));
+byt-shim.c:            adsp->in_reset = 1;
+byt-shim.c:            log_text(adsp->log, LOG_IRQ_BUSY,
+byt-shim.c:            log_text(adsp->log, LOG_IRQ_DONE,
+byt-shim.c:        log_text(adsp->log, LOG_IRQ_ACTIVE,
+byt-shim.c:            adsp_set_lvl1_irq(adsp, adsp->desc->ia_irq, 0);
+byt-shim.c:            adsp_set_lvl1_irq(adsp, adsp->desc->ext_timer_irq, 0);
+byt-shim.c:        log_text(adsp->log, LOG_IRQ_ACTIVE,
+byt-shim.c:            adsp_set_lvl1_irq(adsp, adsp->desc->ext_timer_irq, 0);
+byt-shim.c:                adsp->timer[0].start = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
+byt-shim.c:            adsp->pmc_cmd = val & 0xff;
+byt-shim.c:            switch (adsp->pmc_cmd) {
+byt-shim.c:            qemu_thread_create(&adsp->pmc_thread, "pmc",
+byt-shim.c:        log_text(adsp->log, LOG_IRQ_ACTIVE,
+byt-shim.c:            adsp_set_lvl1_irq(adsp, adsp->desc->pmc_irq, 0);
+byt-shim.c:        if (!adsp->in_reset && (m->val & SHIM_CSR_RST)) {
+byt-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: reset\n");
+byt-shim.c:            cpu_reset(CPU(adsp->xtensa[0]->cpu));
+byt-shim.c:            adsp->in_reset = 1;
+byt-shim.c:        } else if (adsp->in_reset && !(m->val & SHIM_CSR_STALL)) {
+byt-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: running\n");
+byt-shim.c:            cpu_resume(CPU(adsp->xtensa[0]->cpu));
+byt-shim.c:            adsp->in_reset = 0;
+byt-shim.c:        if (!adsp->in_reset && (m->val & SHIM_CSR_RST)) {
+byt-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: reset\n");
+byt-shim.c:            cpu_reset(CPU(adsp->xtensa[0]->cpu));
+byt-shim.c:            adsp->in_reset = 1;
+byt-shim.c:        } else if (adsp->in_reset && !(m->val & SHIM_CSR_STALL)) {
+byt-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: running\n");
+byt-shim.c:            cpu_resume(CPU(adsp->xtensa[0]->cpu));
+byt-shim.c:            adsp->in_reset = 0;
+byt-shim.c:    struct adsp_io_info *info = adsp->shim;
+byt-shim.c:    log_text(adsp->log, LOG_IRQ_ACTIVE,
+byt-shim.c:        adsp_set_lvl1_irq(adsp, adsp->desc->ia_irq, 1);
+byt-shim.c:    adsp->shim = info;
+byt-shim.c:    adsp->timer[0].timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, &byt_ext_timer_cb, info);
+byt-shim.c:    adsp->timer[0].clk_kHz = 2500;
+byt.c:#include "hw/audio/adsp-dev.h"
+byt.c:    log_text(adsp->log, LOG_MSGQ,
+byt.c:    adsp->log = log_init(NULL);    /* TODO: add log name to cmd line */
+byt.c:    adsp->desc = board;
+byt.c:    adsp->shm_idx = 0;
+byt.c:    adsp->system_memory = get_system_memory();
+byt.c:    adsp->machine_opts = qemu_get_machine_opts();
+byt.c:    adsp->cpu_model = machine->cpu_model;
+byt.c:    adsp->kernel_filename = qemu_opt_get(adsp->machine_opts, "kernel");
+byt.c:    adsp->ops = &byt_ops;
+byt.c:    if (!adsp->cpu_model) {
+byt.c:        adsp->cpu_model = XTENSA_DEFAULT_CPU_MODEL;
+byt.c:        adsp->xtensa[n] = g_malloc(sizeof(struct adsp_xtensa));
+byt.c:        adsp->xtensa[n]->cpu = XTENSA_CPU(cpu_create(machine->cpu_type));
+byt.c:        if (adsp->xtensa[n]->cpu == NULL) {
+byt.c:                adsp->cpu_model);
+byt.c:        adsp->xtensa[n]->env = &adsp->xtensa[n]->cpu->env;
+byt.c:        adsp->xtensa[n]->env->sregs[PRID] = n;
+byt.c:        qemu_register_reset(adsp_reset, adsp->xtensa[n]->cpu);
+byt.c:        cpu_reset(CPU(adsp->xtensa[n]->cpu));
+byt.c:    if (adsp->kernel_filename == NULL) {
+byt.c:    lsize = load_image_size(adsp->kernel_filename, ldata,
+byt.c:    log_read(adsp->log, space, addr, size,
+byt.c:    log_write(adsp->log, space, addr, val, size,
+cavs-shim.c:#include "hw/audio/adsp-dev.h"
+cavs-shim.c:	uint64_t time = (qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) - adsp->timer[0].start);
+cavs-shim.c:	uint64_t ticks = ns2ticks(time, adsp->timer[0].clk_kHz);
+cavs-shim.c:    uint64_t waketime = ticks2ns(waketicks, adsp->timer[0].clk_kHz) + adsp->timer[0].start;
+cavs-shim.c:        timer_mod(adsp->timer[0].timer, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) + 10000);
+cavs-shim.c:        timer_mod(adsp->timer[0].timer, waketime);
+cavs-shim.c:    uint64_t waketime = ticks2ns(waketicks, adsp->timer[0].clk_kHz) + adsp->timer[0].start;
+cavs-shim.c:        timer_mod(adsp->timer[1].timer, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) + 10);
+cavs-shim.c:        timer_mod(adsp->timer[1].timer, waketime);
+cavs-shim.c:    cavs_irq_set(adsp->timer[0].info, IRQ_DWCT0, 0);
+cavs-shim.c:    cavs_irq_set(adsp->timer[1].info, IRQ_DWCT1, 0);
+cavs-shim.c:    log_read(adsp->log, space, addr, size,
+cavs-shim.c:    log_write(adsp->log, space, addr, val, size,
+cavs-shim.c:            cavs_irq_clear(adsp->timer[0].info, IRQ_DWCT0, 0);
+cavs-shim.c:            cavs_irq_clear(adsp->timer[1].info, IRQ_DWCT1, 0);
+cavs-shim.c:        if (!adsp->in_reset && (m->val & SHIM_CSR_RST)) {
+cavs-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: reset\n");
+cavs-shim.c:            cpu_reset(CPU(adsp->xtensa[0]->cpu));
+cavs-shim.c:            adsp->in_reset = 1;
+cavs-shim.c:        } else if (adsp->in_reset && !(m->val & SHIM_CSR_STALL)) {
+cavs-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: running\n");
+cavs-shim.c:            cpu_resume(CPU(adsp->xtensa[0]->cpu));
+cavs-shim.c:            adsp->in_reset = 0;
+cavs-shim.c:        if (!adsp->in_reset && (m->val & SHIM_CSR_RST)) {
+cavs-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: reset\n");
+cavs-shim.c:            cpu_reset(CPU(adsp->xtensa[0]->cpu));
+cavs-shim.c:            adsp->in_reset = 1;
+cavs-shim.c:        } else if (adsp->in_reset && !(m->val & SHIM_CSR_STALL)) {
+cavs-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: running\n");
+cavs-shim.c:            cpu_resume(CPU(adsp->xtensa[0]->cpu));
+cavs-shim.c:            adsp->in_reset = 0;
+cavs-shim.c:    adsp->shim = info;
+cavs-shim.c:    adsp->timer[0].timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, &cavs_ext_timer_cb0, info);
+cavs-shim.c:    adsp->timer[0].clk_kHz = adsp->clk_kHz;
+cavs-shim.c:    adsp->timer[1].timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, &cavs_ext_timer_cb1, info);
+cavs-shim.c:    adsp->timer[1].clk_kHz = adsp->clk_kHz;
+cavs-shim.c:    adsp->timer[0].start = adsp->timer[1].start = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
+cavs.c:#include "hw/audio/adsp-dev.h"
+cavs.c:    log_read(adsp->log, space, addr, size,
+cavs.c:    log_write(adsp->log, space, addr, val, size,
+cavs.c:   adsp->ops->irq_set(info, irq, mask);
+cavs.c:     adsp->ops->irq_clear(info, irq, mask);
+cavs.c:    adsp->log = log_init(NULL);    /* TODO: add log name to cmd line */
+cavs.c:    adsp->desc = board;
+cavs.c:    adsp->shm_idx = 0;
+cavs.c:    adsp->system_memory = get_system_memory();
+cavs.c:    adsp->machine_opts = qemu_get_machine_opts();
+cavs.c:    adsp->cpu_model = machine->cpu_model;
+cavs.c:    adsp->kernel_filename = qemu_opt_get(adsp->machine_opts, "kernel");
+cavs.c:    adsp->rom_filename = qemu_opt_get(adsp->machine_opts, "rom");
+cavs.c:    adsp->ops = board->ops;
+cavs.c:    adsp->clk_kHz = clk_kHz;
+cavs.c:    if (!adsp->cpu_model) {
+cavs.c:        adsp->cpu_model = XTENSA_DEFAULT_CPU_MODEL;
+cavs.c:        adsp->xtensa[n] = g_malloc(sizeof(struct adsp_xtensa));
+cavs.c:        adsp->xtensa[n]->cpu = XTENSA_CPU(cpu_create(machine->cpu_type));
+cavs.c:        if (adsp->xtensa[n]->cpu == NULL) {
+cavs.c:                adsp->cpu_model);
+cavs.c:        adsp->xtensa[n]->env = &adsp->xtensa[n]->cpu->env;
+cavs.c:        adsp->xtensa[n]->env->sregs[PRID] = n;
+cavs.c:        qemu_register_reset(adsp_reset, adsp->xtensa[n]->cpu);
+cavs.c:        cpu_reset(CPU(adsp->xtensa[n]->cpu));
+cavs.c:    if (adsp->kernel_filename == NULL) {
+cavs.c:        adsp->kernel_filename, adsp->rom_filename);
+cavs.c:    if (adsp->rom_filename != NULL) {
+cavs.c:        load_image_size(adsp->rom_filename, rom,
+cavs.c:    size = load_image_size(adsp->kernel_filename, man_ptr,
+cavs.c:    if (adsp->rom_filename != NULL && !copy_modules) {
+cavs.c:    adsp->timer[0].info = info;
+cavs.c:    adsp->timer[1].info = info;
+cavs.c:    log_read(adsp->log, space, addr, size,
+cavs.c:    log_write(adsp->log, space, addr, val, size,
+cavs.c:    log_read(adsp->log, space, addr, size,
+cavs.c:    log_write(adsp->log, space, addr, val, size,
+cavs.c:            log_text(adsp->log, LOG_IRQ_BUSY,
+cavs.c:    log_read(adsp->log, space, addr, size,
+cavs.c:    log_write(adsp->log, space, addr, val, size,
+cavs.c:    log_read(adsp->log, space, addr, size,
+cavs.c:    log_write(adsp->log, space, addr, val, size,
+cavs.c:            log_text(adsp->log, LOG_IRQ_BUSY,
+cavs.c:            log_text(adsp->log, LOG_IRQ_BUSY,
+common.c:#include "hw/audio/adsp-dev.h"
+common.c:    CPUXtensaState *env = adsp->xtensa[0]->env;
+common.c:	const struct adsp_desc *board = adsp->desc;
+common.c:	const struct adsp_desc *board = adsp->desc;
+hikey.c:#include "hw/audio/adsp-dev.h"
+hikey.c:    log_read(adsp->log, space, addr, size,
+hikey.c:    log_write(adsp->log, space, addr, val, size,
+hikey.c:    adsp->log = log_init(NULL);    /* TODO: add log name to cmd line */
+hikey.c:    adsp->desc = board;
+hikey.c:    adsp->shm_idx = 0;
+hikey.c:    adsp->system_memory = get_system_memory();
+hikey.c:    adsp->machine_opts = qemu_get_machine_opts();
+hikey.c:    adsp->cpu_model = machine->cpu_model;
+hikey.c:    adsp->kernel_filename = qemu_opt_get(adsp->machine_opts, "kernel");
+hikey.c:    if (!adsp->cpu_model) {
+hikey.c:        adsp->cpu_model = XTENSA_DEFAULT_CPU_MODEL;
+hikey.c:        adsp->xtensa[n] = g_malloc(sizeof(struct adsp_xtensa));
+hikey.c:        adsp->xtensa[n]->cpu = XTENSA_CPU(cpu_create(machine->cpu_type));
+hikey.c:        if (adsp->xtensa[n]->cpu == NULL) {
+hikey.c:                adsp->cpu_model);
+hikey.c:        adsp->xtensa[n]->env = &adsp->xtensa[n]->cpu->env;
+hikey.c:        adsp->xtensa[n]->env->sregs[PRID] = n;
+hikey.c:        qemu_register_reset(adsp_reset, adsp->xtensa[n]->cpu);
+hikey.c:        cpu_reset(CPU(adsp->xtensa[n]->cpu));
+hikey.c:    if (adsp->kernel_filename == NULL) {
+hikey.c:    printf("now loading:\n kernel %s\n", adsp->kernel_filename);
+hikey.c:    size = load_image_size(adsp->kernel_filename, img_ptr,
+hikey.c:    //adsp->ext_timer = timer_new_ns(QEMU_CLOCK_VIRTUAL, &cavs_ext_timer_cb, adsp);
+hikey.c:    //adsp->ext_clk_kHz = 2500;
+hsw-shim.c:#include "hw/audio/adsp-dev.h"
+hsw-shim.c:     log_read(adsp->log, space, addr, size,
+hsw-shim.c:    log_write(adsp->log, space, addr, val, size,
+hsw-shim.c:            log_text(adsp->log, LOG_IRQ_BUSY,
+hsw-shim.c:            log_text(adsp->log, LOG_IRQ_DONE,
+hsw-shim.c:        log_text(adsp->log, LOG_IRQ_ACTIVE,
+hsw-shim.c:            adsp_set_lvl1_irq(adsp, adsp->desc->ia_irq, 0);
+hsw-shim.c:        if (!adsp->in_reset && (m->val & SHIM_CSR_HSW_RST)) {
+hsw-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: reset\n");
+hsw-shim.c:            cpu_reset(CPU(adsp->xtensa[0]->cpu));
+hsw-shim.c:            adsp->in_reset = 1;
+hsw-shim.c:        } else if (adsp->in_reset && !(m->val & SHIM_CSR_HSW_STALL)) {
+hsw-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: running\n");
+hsw-shim.c:            cpu_resume(CPU(adsp->xtensa[0]->cpu));
+hsw-shim.c:            adsp->in_reset = 0;
+hsw-shim.c:        if (!adsp->in_reset && (m->val & SHIM_CSR_RST)) {
+hsw-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: reset\n");
+hsw-shim.c:            cpu_reset(CPU(adsp->xtensa[0]->cpu));
+hsw-shim.c:            adsp->in_reset = 1;
+hsw-shim.c:        } else if (adsp->in_reset && !(m->val & SHIM_CSR_STALL)) {
+hsw-shim.c:            log_text(adsp->log, LOG_CPU_RESET, "cpu: running\n");
+hsw-shim.c:            cpu_resume(CPU(adsp->xtensa[0]->cpu));
+hsw-shim.c:            adsp->in_reset = 0;
+hsw-shim.c:     struct adsp_io_info *info = adsp->shim;
+hsw-shim.c:    log_text(adsp->log, LOG_IRQ_ACTIVE,
+hsw-shim.c:        adsp_set_lvl1_irq(adsp, adsp->desc->ia_irq, 1);
+hsw-shim.c:    adsp->shim = info;
+hsw.c:#include "hw/audio/adsp-dev.h"
+hsw.c:    adsp->log = log_init(NULL);    /* TODO: add log name to cmd line */
+hsw.c:    adsp->desc = board;
+hsw.c:    adsp->shm_idx = 0;
+hsw.c:    adsp->system_memory = get_system_memory();
+hsw.c:    adsp->machine_opts = qemu_get_machine_opts();
+hsw.c:    adsp->cpu_model = machine->cpu_model;
+hsw.c:    adsp->kernel_filename = qemu_opt_get(adsp->machine_opts, "kernel");
+hsw.c:    adsp->ops = &hsw_ops;
+hsw.c:    if (!adsp->cpu_model) {
+hsw.c:        adsp->cpu_model = XTENSA_DEFAULT_CPU_MODEL;
+hsw.c:        adsp->xtensa[n] = g_malloc(sizeof(struct adsp_xtensa));
+hsw.c:         adsp->xtensa[n]->cpu = XTENSA_CPU(cpu_create(machine->cpu_type));
+hsw.c:        if (adsp->xtensa[n]->cpu == NULL) {
+hsw.c:                adsp->cpu_model);
+hsw.c:        adsp->xtensa[n]->env = &adsp->xtensa[n]->cpu->env;
+hsw.c:        adsp->xtensa[n]->env->sregs[PRID] = n;
+hsw.c:        qemu_register_reset(adsp_reset, adsp->xtensa[n]->cpu);
+hsw.c:        cpu_reset(CPU(adsp->xtensa[n]->cpu));
+hsw.c:    if (adsp->kernel_filename == NULL) {
+hsw.c:    lsize = load_image_size(adsp->kernel_filename, ldata,
+mbox.c:#include "hw/audio/adsp-dev.h"
+mbox.c:    log_area_read(adsp->log, space, addr, size,
+mbox.c:    log_area_write(adsp->log, space, addr, val, size,
