@@ -1,8 +1,8 @@
-/* Core DSP support for Baytrail audio DSP.
+/* Core DSP support for i.MX8 audio DSP.
  *
- * Copyright (C) 2016 Intel Corporation
+ * Copyright 2019 NXP
  *
- * Author: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+ * Author: Diana Cretu <diana.cretu@nxp.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -218,35 +218,27 @@ static struct adsp_reg_space imx8_io[] = {
         .reg = adsp_gp_dma_map, .irq = IRQ_NUM_EXT_DMAC0,
         .init = &dw_dma_init_dev, .ops = &dw_dmac_ops,
         .desc = {.base = ADSP_IMX8_DMA0_BASE, .size = ADSP_IMX8_DMA0_SIZE},},
-    { .name = "dmac1", .reg_count = ARRAY_SIZE(adsp_gp_dma_map),
-        .reg = adsp_gp_dma_map, .irq = IRQ_NUM_EXT_DMAC1,
-        .init = &dw_dma_init_dev, .ops = &dw_dmac_ops,
-        .desc = {.base = ADSP_IMX8_DMA1_BASE, .size = ADSP_IMX8_DMA1_SIZE},},
-    { .name = "dmac2", .reg_count = ARRAY_SIZE(adsp_gp_dma_map),
-        .reg = adsp_gp_dma_map, .irq = IRQ_NUM_EXT_DMAC2,
-        .init = &dw_dma_init_dev, .ops = &dw_dmac_ops,
-        .desc = {.base = ADSP_IMX8_DMA2_BASE, .size = ADSP_IMX8_DMA2_SIZE},},
-    { .name = "ssp0", .reg_count = ARRAY_SIZE(adsp_ssp_map),
+   { .name = "esai0", .reg_count = ARRAY_SIZE(adsp_esai_map),
         .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP0,
         .init = &adsp_ssp_init, .ops = &ssp_ops,
         .desc = {.base = ADSP_IMX8_SSP0_BASE, .size = ADSP_IMX8_SSP0_SIZE},},
-    { .name = "ssp1", .reg_count = ARRAY_SIZE(adsp_ssp_map),
+    { .name = "sai0", .reg_count = ARRAY_SIZE(adsp_sai_map),
         .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP1,
         .init = &adsp_ssp_init, .ops = &ssp_ops,
         .desc = {.base = ADSP_IMX8_SSP1_BASE, .size = ADSP_IMX8_SSP1_SIZE},},
-    { .name = "ssp2", .reg_count = ARRAY_SIZE(adsp_ssp_map),
+    { .name = "sai1", .reg_count = ARRAY_SIZE(adsp_ssp_map),
         .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP2,
         .init = &adsp_ssp_init, .ops = &ssp_ops,
         .desc = {.base = ADSP_IMX8_SSP2_BASE, .size = ADSP_IMX8_SSP2_SIZE},},
-    { .name = "ssp3", .reg_count = ARRAY_SIZE(adsp_ssp_map),
+    { .name = "sai2", .reg_count = ARRAY_SIZE(adsp_ssp_map),
         .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP0,
         .init = &adsp_ssp_init, .ops = &ssp_ops,
         .desc = {.base = ADSP_IMX8_SSP3_BASE, .size = ADSP_IMX8_SSP3_SIZE},},
-    { .name = "ssp4", .reg_count = ARRAY_SIZE(adsp_ssp_map),
+    { .name = "sai3", .reg_count = ARRAY_SIZE(adsp_ssp_map),
         .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP1,
         .init = &adsp_ssp_init, .ops = &ssp_ops,
         .desc = {.base = ADSP_IMX8_SSP4_BASE, .size = ADSP_IMX8_SSP4_SIZE},},
-    { .name = "ssp5", .reg_count = ARRAY_SIZE(adsp_ssp_map),
+    { .name = "sai4", .reg_count = ARRAY_SIZE(adsp_ssp_map),
         .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP2,
         .init = &adsp_ssp_init, .ops = &ssp_ops,
         .desc = {.base = ADSP_IMX8_SSP5_BASE, .size = ADSP_IMX8_SSP5_SIZE},},
