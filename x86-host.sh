@@ -26,6 +26,10 @@ case $1 in
  ADSP="-device driver=adsp-bdw"
  HDA=""
   ;;
+*imx8)
+ ADSP="-device driver=adsp-imx8"
+ HDA=""
+  ;;
 *bxt)
  HDA=" -device bxt-intel-hda,id=sound0,bus=pci.0,addr=0xe"
   ;;

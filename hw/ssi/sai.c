@@ -1,4 +1,4 @@
-/* Virtualization support for ESAI.
+/* Virtualization support for SAI.
  *
  * Copyright (C) 2016 Intel Corporation
  *
@@ -29,14 +29,14 @@
 #include "hw/adsp/shim.h"
 #include "hw/adsp/log.h"
 #include "hw/ssi/ssp.h"
-#include "hw/ssi/esai.h"
+#include "hw/ssi/sai.h"
 
-const struct adsp_reg_desc adsp_esai_map[ADSP_SSP_REGS] = {
-    {.name = "esai", .enable = LOG_SSP,
+const struct adsp_reg_desc adsp_sai_map[ADSP_SSP_REGS] = {
+    {.name = "sai", .enable = LOG_SSP,
         .offset = 0x00000000, .size = 0x4000},
 };
 
-static void esai_reset(void *opaque)
+static void sai_reset(void *opaque)
 {
      struct adsp_io_info *info = opaque;
      struct adsp_reg_space *space = info->space;
@@ -44,25 +44,25 @@ static void esai_reset(void *opaque)
      memset(info->region, 0, space->desc.size);
 }
 
-static uint64_t esai_read(void *opaque, hwaddr addr,
+static uint64_t sai_read(void *opaque, hwaddr addr,
         unsigned size)
 {
     struct adsp_io_info *info = opaque;
     struct adsp_reg_space *space = info->space;
-    struct adsp_esai *esai = info->private;
+    struct adsp_sai *sai = info->private;
 
-    log_read(esai->log, space, addr, size,
+    log_read(sai->log, space, addr, size,
         info->region[addr >> 2]);
 
     return info->region[addr >> 2];
 }
 
-static void esai_write(void *opaque, hwaddr addr,
+static void sai_write(void *opaque, hwaddr addr,
         uint64_t val, unsigned size)
 {
     struct adsp_io_info *info = opaque;
     struct adsp_reg_space *space = info->space;
-    struct adsp_esai *esai = info->private;
+    struct adsp_sai *sai = info->private;
     uint32_t set, clear;
 
     log_write(ssp->log, space, addr, val, size,
@@ -79,65 +79,65 @@ static void esai_write(void *opaque, hwaddr addr,
         if (set & SSCR1_TSRE) {
 
             /* create filename */
-            sprintf(esai->tx.file_name, "/tmp/%s-play%d.wav",
-                esai->name, esai->tx.index++);
+            sprintf(ssp->tx.file_name, "/tmp/%s-play%d.wav",
+                ssp->name, ssp->tx.index++);
 
-            unlink(esai->tx.file_name);
-            esai->tx.fd = open(esai->tx.file_name, O_WRONLY | O_CREAT,
+            unlink(ssp->tx.file_name);
+            sai->tx.fd = open(sai->tx.file_name, O_WRONLY | O_CREAT,
                 S_IRUSR | S_IWUSR | S_IXUSR);
 
-            if (esai->tx.fd < 0) {
+            if (sai->tx.fd < 0) {
                 fprintf(stderr, "cant open file %s %d\n",
-                    esai->tx.file_name, -errno);
+                    sai->tx.file_name, -errno);
                 return;
             } else
                 printf("%s opened %s for playback\n",
-                    esai->name, esai->tx.file_name);
+                    sai->name, sai->tx.file_name);
 
-            esai->tx.total_frames = 0;
+            sai->tx.total_frames = 0;
         }
 
         /* close file if playback has finished */
         if (clear & SSCR1_TSRE) {
             printf("%s closed %s for playback at %d frames\n",
-                esai->name,
-                esai->tx.file_name, esai->tx.total_frames);
-            close(esai->tx.fd);
-            esai->tx.fd = 0;
+                sai->name,
+                sai->tx.file_name, sai->tx.total_frames);
+            close(sai->tx.fd);
+            sai->tx.fd = 0;
         }
 
         /* open file if capture has been enabled */
         if (set & SSCR1_RSRE) {
 
             /* create filename */
-            sprintf(esai->rx.file_name, "/tmp/%s-capture.wav",
-                esai->name);
+            sprintf(sai->rx.file_name, "/tmp/%s-capture.wav",
+                sai->name);
 
-            esai->rx.fd = open(esai->tx.file_name, O_RDONLY,
+            sai->rx.fd = open(sai->tx.file_name, O_RDONLY,
                 S_IRUSR | S_IWUSR | S_IXUSR);
 
-            if (esai->rx.fd < 0) {
+            if (sai->rx.fd < 0) {
                 fprintf(stderr, "cant open file %s %d\n",
-                    esai->rx.file_name, -errno);
+                    sai->rx.file_name, -errno);
                 return;
             } else
                 printf("%s opened %s for capture\n",
-                    esai->name, esai->rx.file_name);
+                    sai->name, sai->rx.file_name);
 
-            esai->rx.total_frames = 0;
+            sai->rx.total_frames = 0;
         }
 
         /* close file if capture has finished */
         if (clear & SSCR1_RSRE) {
-            printf("%s closed %s for capture at %d frames\n", esai->name,
-                esai->rx.file_name, esai->rx.total_frames);
-            close(esai->rx.fd);
-            esai->rx.fd = 0;
+            printf("%s closed %s for capture at %d frames\n", sai->name,
+                sai->rx.file_name, sai->rx.total_frames);
+            close(sai->rx.fd);
+            sai->rx.fd = 0;
         }
         break;
     case SSDR:
         /* update counters */
-        esai->tx.total_frames += size;
+        sai->tx.total_frames += size;
         info->region[addr >> 2] = val;
 
         break;
@@ -147,38 +147,38 @@ static void esai_write(void *opaque, hwaddr addr,
     }
 }
 
-const MemoryRegionOps esai_ops = {
-    .read = esai_read,
-    .write = esai_write,
+const MemoryRegionOps sai_ops = {
+    .read = sai_read,
+    .write = sai_write,
     .endianness = DEVICE_NATIVE_ENDIAN,
 };
 
 #define MAX_SSP     6
-struct adsp_esai *_esai[MAX_SSP] = {NULL, NULL, NULL, NULL, NULL, NULL};
+struct adsp_sai *_sai[MAX_SSP] = {NULL, NULL, NULL, NULL, NULL, NULL};
 
-struct adsp_esai *esai_get_port(int port)
+struct adsp_sai *sai_get_port(int port)
 {
     if (port >= 0  && port < MAX_SSP)
-        return _esai[port];
+        return _sai[port];
 
     // TODO find an alternative
-    fprintf(stderr, "cant get ESAI port %d\n", port);
+    fprintf(stderr, "cant get SAI port %d\n", port);
     return NULL;
 }
 
-void adsp_esai_init(struct adsp_dev *adsp, MemoryRegion *parent,
+void adsp_sai_init(struct adsp_dev *adsp, MemoryRegion *parent,
         struct adsp_io_info *info)
 {
-    struct adsp_esai *esai;
+    struct adsp_sai *sai;
 
-    esai = g_malloc(sizeof(*esai));
+    sai = g_malloc(sizeof(*sai));
 
-    esai->tx.level = 0;
-    esai->rx.level = 0;
-    sprintf(esai->name, "%s.io", info->space->name);
+    sai->tx.level = 0;
+    sai->rx.level = 0;
+    sprintf(sai->name, "%s.io", info->space->name);
 
-    esai->log = log_init(NULL);
-    info->private = esai;
-    esai_reset(info);
-    _esai[info->io_dev] = esai;
+    sai->log = log_init(NULL);
+    info->private = sai;
+    sai_reset(info);
+    _sai[info->io_dev] = sai;
 }

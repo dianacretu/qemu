@@ -69,7 +69,7 @@ case $1 in
   ;;
 *imx8)
  CPU="imx8"
- ADSP="imx8"
+ ADSP="adsp_imx8"
   ;;
 *)
   echo "usage: $0 device"

@@ -31,15 +31,15 @@
 //#define IRQ_NUM_TIMER3       7
 //#define IRQ_NUM_SOFTWARE4    8
 //#define IRQ_NUM_SOFTWARE5    9
-//#define IRQ_NUM_EXT_IA       10
-//#define IRQ_NUM_EXT_PMC      11
+#define IRQ_NUM_EXT_IA       10
+#define IRQ_NUM_EXT_PMC      11
 //#define IRQ_NUM_SOFTWARE6    12
-//#define IRQ_NUM_EXT_DMAC0    13
-//#define IRQ_NUM_EXT_DMAC1    14
-//#define IRQ_NUM_EXT_TIMER    15
-//#define IRQ_NUM_EXT_SSP0     16
-//#define IRQ_NUM_EXT_SSP1     17
-//#define IRQ_NUM_EXT_SSP2     18
+#define IRQ_NUM_EXT_DMAC0    13
+#define IRQ_NUM_EXT_DMAC1    14
+#define IRQ_NUM_EXT_TIMER    15
+#define IRQ_NUM_EXT_SSP0     16
+#define IRQ_NUM_EXT_SSP1     17
+#define IRQ_NUM_EXT_SSP2     18
 //#define IRQ_NUM_EXT_DMAC2    19
 //#define IRQ_NUM_NMI          20
 

@@ -38,6 +38,8 @@
 #include "hw/adsp/byt.h"
 #include "hw/adsp/imx8.h"
 #include "hw/ssi/ssp.h"
+#include "hw/ssi/sai.h"
+#include "hw/ssi/esai.h"
 #include "hw/dma/dw-dma.h"
 #include "mbox.h"
 #include "imx8.h"
@@ -219,28 +221,28 @@ static struct adsp_reg_space imx8_io[] = {
         .init = &dw_dma_init_dev, .ops = &dw_dmac_ops,
         .desc = {.base = ADSP_IMX8_DMA0_BASE, .size = ADSP_IMX8_DMA0_SIZE},},
    { .name = "esai0", .reg_count = ARRAY_SIZE(adsp_esai_map),
-        .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP0,
-        .init = &adsp_ssp_init, .ops = &ssp_ops,
+        .reg = adsp_esai_map, .irq = IRQ_NUM_EXT_SSP0,
+        .init = &adsp_esai_init, .ops = &esai_ops,
         .desc = {.base = ADSP_IMX8_SSP0_BASE, .size = ADSP_IMX8_SSP0_SIZE},},
     { .name = "sai0", .reg_count = ARRAY_SIZE(adsp_sai_map),
-        .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP1,
-        .init = &adsp_ssp_init, .ops = &ssp_ops,
+        .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP1,
+        .init = &adsp_sai_init, .ops = &sai_ops,
         .desc = {.base = ADSP_IMX8_SSP1_BASE, .size = ADSP_IMX8_SSP1_SIZE},},
-    { .name = "sai1", .reg_count = ARRAY_SIZE(adsp_ssp_map),
-        .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP2,
-        .init = &adsp_ssp_init, .ops = &ssp_ops,
+    { .name = "sai1", .reg_count = ARRAY_SIZE(adsp_sai_map),
+        .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP2,
+        .init = &adsp_sai_init, .ops = &sai_ops,
         .desc = {.base = ADSP_IMX8_SSP2_BASE, .size = ADSP_IMX8_SSP2_SIZE},},
-    { .name = "sai2", .reg_count = ARRAY_SIZE(adsp_ssp_map),
-        .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP0,
-        .init = &adsp_ssp_init, .ops = &ssp_ops,
+    { .name = "sai2", .reg_count = ARRAY_SIZE(adsp_sai_map),
+        .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP0,
+        .init = &adsp_sai_init, .ops = &sai_ops,
         .desc = {.base = ADSP_IMX8_SSP3_BASE, .size = ADSP_IMX8_SSP3_SIZE},},
-    { .name = "sai3", .reg_count = ARRAY_SIZE(adsp_ssp_map),
-        .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP1,
-        .init = &adsp_ssp_init, .ops = &ssp_ops,
+    { .name = "sai3", .reg_count = ARRAY_SIZE(adsp_sai_map),
+        .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP1,
+        .init = &adsp_sai_init, .ops = &sai_ops,
         .desc = {.base = ADSP_IMX8_SSP4_BASE, .size = ADSP_IMX8_SSP4_SIZE},},
-    { .name = "sai4", .reg_count = ARRAY_SIZE(adsp_ssp_map),
-        .reg = adsp_ssp_map, .irq = IRQ_NUM_EXT_SSP2,
-        .init = &adsp_ssp_init, .ops = &ssp_ops,
+    { .name = "sai4", .reg_count = ARRAY_SIZE(adsp_sai_map),
+        .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP2,
+        .init = &adsp_sai_init, .ops = &sai_ops,
         .desc = {.base = ADSP_IMX8_SSP5_BASE, .size = ADSP_IMX8_SSP5_SIZE},},
     { .name = "shim", .reg_count = ARRAY_SIZE(adsp_byt_shim_map),
         .reg = adsp_byt_shim_map, .init = &adsp_imx8_shim_init, .ops = &imx8_shim_ops,

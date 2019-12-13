@@ -6,11 +6,11 @@
  *
  */
 
-#ifndef __ADSP_ESAI_H__
-#define __ADSP_ESAI_H__
+#ifndef __ADSP_SAI_H__
+#define __ADSP_SAI_H__
 
-/* ESAI registers start */
-/* ESAI register offsets */
+/* SAI registers start */
+/* SAI register offsets */
 #define SSCR0       0x00
 #define SSCR1       0x04
 #define SSSR        0x08
@@ -90,9 +90,9 @@
 #define SSPSP_FSRT      (1 << 25)
 
 
-/* ESAI registers end */
+/* SAI registers end */
 
-/* ESAI register offsets */
+/* SAI register offsets */
 #define SSCR0       0x00
 #define SSCR1       0x04
 #define SSSR        0x08
@@ -109,7 +109,7 @@ struct adsp_gp_dmac;
 struct adsp_log;
 struct adsp_reg_space;
 
-struct esai_fifo {
+struct sai_fifo {
 	uint32_t total_frames;
 	uint32_t index;
 	int fd;
@@ -118,23 +118,23 @@ struct esai_fifo {
 	uint32_t level;
 };
 
-struct adsp_esai {
+struct adsp_sai {
 	char name[32];
 	uint32_t *io;
 
-	struct esai_fifo tx;
-	struct esai_fifo rx;
+	struct sai_fifo tx;
+	struct sai_fifo rx;
 
 	struct adsp_log *log;
-	const struct adsp_reg_space *esai_dev;
+	const struct adsp_reg_space *sai_dev;
 };
 
-#define ADSP_ESAI_REGS		1
-extern const struct adsp_reg_desc adsp_esai_map[ADSP_ESAI_REGS];
+#define ADSP_SAI_REGS		1
+extern const struct adsp_reg_desc adsp_sai_map[ADSP_SAI_REGS];
 
-struct adsp_esai *esai_get_port(int port);
-void adsp_esai_init(struct adsp_dev *adsp, MemoryRegion *parent,
+struct adsp_sai *sai_get_port(int port);
+void adsp_sai_init(struct adsp_dev *adsp, MemoryRegion *parent,
         struct adsp_io_info *info);
-extern const MemoryRegionOps esai_ops;
+extern const MemoryRegionOps sai_ops;
 
 #endif
