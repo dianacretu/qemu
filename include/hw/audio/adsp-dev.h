@@ -44,6 +44,7 @@ struct adsp_dev_ops {
 struct adsp_dev {
 
     struct adsp_io_info *shim;
+    struct adsp_io_info *mu;
     int shm_idx;
 
 	/* runtime CPU */

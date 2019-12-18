@@ -145,4 +145,15 @@ void build_acpi_bxt_adsp_devices(Aml *table);
 
 void adsp_hda_init(IntelHDAState *d, int version, const char *name);
 
+#define ADSP_HOST_IMX8_NAME        "adsp-imx8"
+
+void adsp_imx8_init_pci(struct adsp_host *adsp, MemoryRegion *parent,
+        struct adsp_io_info *info);
+void adsp_imx8_pci_realize(PCIDevice *pci_dev, Error **errp);
+void adsp_imx8_pci_exit(PCIDevice *pci_dev);
+void adsp_imx8_init_mu(struct adsp_host *adsp, MemoryRegion *parent,
+        struct adsp_io_info *info);
+void adsp_imx8_host_init(struct adsp_host *adsp, const char *name);
+void build_acpi_imx8_adsp_devices(Aml *table);
+
 #endif

@@ -34,12 +34,13 @@
 
 #include "hw/audio/adsp-dev.h"
 #include "hw/adsp/shim.h"
+#include "hw/adsp/mu.h"
 #include "hw/adsp/log.h"
 #include "hw/adsp/byt.h"
 #include "hw/adsp/imx8.h"
 #include "hw/ssi/ssp.h"
-#include "hw/ssi/sai.h"
-#include "hw/ssi/esai.h"
+//#include "hw/ssi/sai.h"
+//#include "hw/ssi/esai.h"
 #include "hw/dma/dw-dma.h"
 #include "mbox.h"
 #include "imx8.h"
@@ -65,7 +66,7 @@ static int bridge_cb(void *data, struct qemu_io_msg *msg)
     switch (msg->type) {
     case QEMU_IO_TYPE_REG:
         /* mostly handled by SHM, some exceptions */
-        adsp_imx8_shim_msg(adsp, msg);
+        adsp_imx8_mu_msg(adsp, msg);
         break;
     case QEMU_IO_TYPE_IRQ:
         adsp_imx8_irq_msg(adsp, msg);
@@ -162,9 +163,9 @@ static struct adsp_dev *adsp_init(const struct adsp_desc *board,
     }
 
     /* load the binary image and copy to IRAM */
-    ldata = g_malloc(ADSP_IMX8_IRAM_SIZE + ADSP_IMX8_DRAM_SIZE);
+    ldata = g_malloc(ADSP_IMX8_IRAM_SIZE + ADSP_IMX8_SDRAM0_SIZE + ADSP_IMX8_SDRAM1_SIZE);
     lsize = load_image_size(adsp->kernel_filename, ldata,
-         ADSP_IMX8_IRAM_SIZE + ADSP_IMX8_DRAM_SIZE);
+         ADSP_IMX8_IRAM_SIZE + ADSP_IMX8_SDRAM0_SIZE + ADSP_IMX8_SDRAM1_SIZE);
 
     adsp_load_modules(adsp, ldata, lsize);
 
@@ -213,43 +214,48 @@ static struct adsp_mem_desc imx8_mem[] = {
         .size = ADSP_IMX8_IRAM_SIZE},
     {.name = "dram", .base = ADSP_IMX8_DSP_DRAM_BASE,
         .size = ADSP_IMX8_DRAM_SIZE},
+   {.name = "sdram0", .base = ADSP_IMX8_DSP_SDRAM0_BASE,
+        .size = ADSP_IMX8_SDRAM0_SIZE},
 };
+
 
 static struct adsp_reg_space imx8_io[] = {
     { .name = "dmac0", .reg_count = ARRAY_SIZE(adsp_gp_dma_map),
         .reg = adsp_gp_dma_map, .irq = IRQ_NUM_EXT_DMAC0,
         .init = &dw_dma_init_dev, .ops = &dw_dmac_ops,
         .desc = {.base = ADSP_IMX8_DMA0_BASE, .size = ADSP_IMX8_DMA0_SIZE},},
+#if 0
    { .name = "esai0", .reg_count = ARRAY_SIZE(adsp_esai_map),
         .reg = adsp_esai_map, .irq = IRQ_NUM_EXT_SSP0,
         .init = &adsp_esai_init, .ops = &esai_ops,
-        .desc = {.base = ADSP_IMX8_SSP0_BASE, .size = ADSP_IMX8_SSP0_SIZE},},
+        .desc = {.base = ADSP_IMX8_ESAI_BASE, .size = ADSP_IMX8_ESAI_SIZE},},
     { .name = "sai0", .reg_count = ARRAY_SIZE(adsp_sai_map),
         .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP1,
         .init = &adsp_sai_init, .ops = &sai_ops,
-        .desc = {.base = ADSP_IMX8_SSP1_BASE, .size = ADSP_IMX8_SSP1_SIZE},},
+        .desc = {.base = ADSP_IMX8_SAI_1_BASE, .size = ADSP_IMX8_SAI_1_SIZE},},
     { .name = "sai1", .reg_count = ARRAY_SIZE(adsp_sai_map),
         .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP2,
         .init = &adsp_sai_init, .ops = &sai_ops,
-        .desc = {.base = ADSP_IMX8_SSP2_BASE, .size = ADSP_IMX8_SSP2_SIZE},},
+	.desc = {.base = ADSP_IMX8_SAI_1_BASE, .size = ADSP_IMX8_SAI_1_SIZE},},
     { .name = "sai2", .reg_count = ARRAY_SIZE(adsp_sai_map),
         .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP0,
         .init = &adsp_sai_init, .ops = &sai_ops,
-        .desc = {.base = ADSP_IMX8_SSP3_BASE, .size = ADSP_IMX8_SSP3_SIZE},},
+        .desc = {.base = ADSP_IMX8_SAI_1_BASE, .size = ADSP_IMX8_SAI_1_SIZE},},
     { .name = "sai3", .reg_count = ARRAY_SIZE(adsp_sai_map),
         .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP1,
         .init = &adsp_sai_init, .ops = &sai_ops,
-        .desc = {.base = ADSP_IMX8_SSP4_BASE, .size = ADSP_IMX8_SSP4_SIZE},},
+        .desc = {.base = ADSP_IMX8_SAI_1_BASE, .size = ADSP_IMX8_SAI_1_SIZE},},
     { .name = "sai4", .reg_count = ARRAY_SIZE(adsp_sai_map),
         .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP2,
         .init = &adsp_sai_init, .ops = &sai_ops,
-        .desc = {.base = ADSP_IMX8_SSP5_BASE, .size = ADSP_IMX8_SSP5_SIZE},},
-    { .name = "shim", .reg_count = ARRAY_SIZE(adsp_byt_shim_map),
-        .reg = adsp_byt_shim_map, .init = &adsp_imx8_shim_init, .ops = &imx8_shim_ops,
+        .desc = {.base = ADSP_IMX8_SAI_1_BASE, .size = ADSP_IMX8_SAI_1_SIZE},},
+#endif
+    { .name = "mu", .reg_count = ARRAY_SIZE(adsp_imx8_mu_map),
+        .reg = adsp_imx8_mu_map, .init = &adsp_imx8_mu_init, .ops = &imx8_mu_ops,
         .desc = {.base = ADSP_IMX8_DSP_SHIM_BASE, .size = ADSP_IMX8_SHIM_SIZE},},
-    { .name = "mbox", .reg_count = ARRAY_SIZE(adsp_mbox_map),
-        .reg = adsp_mbox_map, .ops = &mbox_io_ops,
-        .desc = {.base = ADSP_IMX8_DSP_MAILBOX_BASE, .size = ADSP_MAILBOX_SIZE},},
+    { .name = "mbox", .reg_count = ARRAY_SIZE(adsp_imx8_mbox_map),
+        .reg = adsp_imx8_mbox_map, .ops = &mbox_io_ops,
+        .desc = {.base = ADSP_IMX8_DSP_MAILBOX_BASE, .size = ADSP_IMX8_DSP_MAILBOX_SIZE},},
 };
 
 /* hardware memory map */

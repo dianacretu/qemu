@@ -30,10 +30,11 @@
 #include "hw/adsp/log.h"
 #include "hw/ssi/ssp.h"
 #include "hw/ssi/esai.h"
+#include "hw/adsp/imx8.h"
 
-const struct adsp_reg_desc adsp_esai_map[ADSP_SSP_REGS] = {
-    {.name = "esai", .enable = LOG_SSP,
-        .offset = 0x00000000, .size = 0x4000},
+const struct adsp_reg_desc adsp_esai_map[ADSP_ESAI_REGS] = {
+    {.name = "esai", .enable = LOG_ESAI,
+        .offset = 0x00000000, .size = ADSP_IMX8_ESAI_SIZE},
 };
 
 static void esai_reset(void *opaque)
@@ -65,18 +66,18 @@ static void esai_write(void *opaque, hwaddr addr,
     struct adsp_esai *esai = info->private;
     uint32_t set, clear;
 
-    log_write(ssp->log, space, addr, val, size,
+    log_write(esai->log, space, addr, val, size,
         info->region[addr >> 2]);
 
     switch (addr) {
-    case SSCR1:
+    case REG_ESAI_TCR:
         set = val & ~info->region[addr >> 2];
         clear = ~val & info->region[addr >> 2];
 
         info->region[addr >> 2] = val;
 
         /* open file if playback has been enabled */
-        if (set & SSCR1_TSRE) {
+        if (set & ESAI_xCR_TE(1)) {
 
             /* create filename */
             sprintf(esai->tx.file_name, "/tmp/%s-play%d.wav",
@@ -98,14 +99,15 @@ static void esai_write(void *opaque, hwaddr addr,
         }
 
         /* close file if playback has finished */
-        if (clear & SSCR1_TSRE) {
+        if (clear & ESAI_xCR_TE(1))) {
             printf("%s closed %s for playback at %d frames\n",
                 esai->name,
                 esai->tx.file_name, esai->tx.total_frames);
             close(esai->tx.fd);
             esai->tx.fd = 0;
         }
-
+	
+    	case REG_ESAI_RCR:
         /* open file if capture has been enabled */
         if (set & SSCR1_RSRE) {
 

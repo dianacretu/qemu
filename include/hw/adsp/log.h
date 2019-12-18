@@ -85,6 +85,19 @@
 #define LOG_SHIM_EXTTH	1
 #define LOG_SHIM_EXTST	0
 
+/* mu debug options - LOG_MU must be 1 to enable other options */
+#define LOG_MU                  1
+#define LOG_MUA_ATR0            1
+#define LOG_MUA_ATR1            1
+#define LOG_MUA_ATR2            1
+#define LOG_MUA_ATR3            1
+#define LOG_MUA_ARR0            1
+#define LOG_MUA_ARR1            1
+#define LOG_MUA_ARR2            1
+#define LOG_MUA_ARR3            1
+#define LOG_MUA_ASR             1
+#define LOG_MUA_ACR             1
+
 /* IRQ debug options */
 #define LOG_IRQ_BUSY		1
 #define LOG_IRQ_DONE		1
@@ -106,6 +119,12 @@
 /* SSP Logging */
 #define LOG_SSP 1
 
+/* ESAI Logging */
+#define LOG_ESAI 1
+
+/* SSP Logging */
+#define LOG_SAI 1
+
 struct adsp_log {
 	GMutex mutex;
 	FILE *file;
@@ -123,8 +142,8 @@ extern const struct adsp_reg_desc adsp_bxt_shim_map[BXT_SHIM_REGS];
 extern const struct adsp_reg_desc adsp_sue_shim_map[SUE_SHIM_REGS];
 #define CNL_SHIM_REGS   25
 extern const struct adsp_reg_desc adsp_cnl_shim_map[CNL_SHIM_REGS];
-#define IMX8_SHIM_REGS  25
-extern const struct adsp_reg_desc adsp_imx8_shim_map[IMX8_SHIM_REGS];
+#define IMX8_MU_REGS    10
+extern const struct adsp_reg_desc adsp_imx8_mu_map[IMX8_MU_REGS];
 
 #if LOG_SHIM
 

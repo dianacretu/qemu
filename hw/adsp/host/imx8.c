@@ -22,11 +22,11 @@
 #include "hw/adsp/imx8.h"
 #include "hw/adsp/log.h"
 
-extern const MemoryRegionOps adsp_imx8_host_shim_ops;
+extern const MemoryRegionOps adsp_imx8_host_mu_ops;
 extern const MemoryRegionOps adsp_host_mbox_ops;
 extern const MemoryRegionOps imx8_host_pci_ops;
 
-static struct adsp_mem_desc byt_mem[] = {
+static struct adsp_mem_desc imx8_mem[] = {
     {.name = "iram", .base = ADSP_IMX8_HOST_IRAM_BASE,
         .size = ADSP_IMX8_IRAM_SIZE},
     {.name = "dram", .base = ADSP_IMX8_HOST_DRAM_BASE,
@@ -39,11 +39,11 @@ static struct adsp_reg_space imx8_io[] = {
         .init = (void*)adsp_imx8_init_pci,
         .ops = &imx8_host_pci_ops,
     },
-    { .name = "shim", .reg_count = ARRAY_SIZE(adsp_imx8_shim_map),
-        .reg = adsp_imx8_shim_map,
+    { .name = "mu", .reg_count = ARRAY_SIZE(adsp_imx8_mu_map),
+        .reg = adsp_imx8_mu_map,
         .desc = {.base = ADSP_IMX8_HOST_SHIM_BASE, .size = ADSP_IMX8_SHIM_SIZE},
-        .init = (void*)adsp_imx8_init_shim,
-        .ops = &adsp_imx8_host_shim_ops,
+        .init = (void*)adsp_imx8_init_mu,
+        .ops = &adsp_imx8_host_mu_ops,
     },
     { .name = "mbox", .reg_count = ARRAY_SIZE(adsp_host_mbox_map),
         .reg = adsp_host_mbox_map,
@@ -82,7 +82,7 @@ static void do_pm(struct qemu_io_msg *msg)
 {
 }
 
-static int byt_bridge_cb(void *data, struct qemu_io_msg *msg)
+static int imx8_bridge_cb(void *data, struct qemu_io_msg *msg)
 {
     struct adsp_host *adsp = (struct adsp_host *)data;
 

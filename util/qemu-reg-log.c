@@ -28,6 +28,7 @@
 
 #include "qemu/io-bridge.h"
 #include "hw/adsp/shim.h"
+#include "hw/adsp/mu.h"
 #include "hw/adsp/log.h"
 
 const struct adsp_reg_desc adsp_byt_shim_map[] = {
@@ -152,6 +153,19 @@ const struct adsp_reg_desc adsp_bxt_shim_map[] = {
     {.name = "exttl", .enable = LOG_SHIM_EXTTL, .offset = 0xc0},
     {.name = "extth", .enable = LOG_SHIM_EXTTH, .offset = 0xc4},
     {.name = "extst", .enable = LOG_SHIM_EXTST, .offset = 0xc8},
+};
+
+const struct adsp_reg_desc adsp_imx8_mu_map[] = {
+    {.name = "mua_atr0", .enable = LOG_MUA_ATR0, .offset = 0x0},
+    {.name = "mua_atr1", .enable = LOG_MUA_ATR1, .offset = 0x8},
+    {.name = "mua_atr2", .enable = LOG_MUA_ATR2, .offset = 0x10},
+    {.name = "mua_atr3", .enable = LOG_MUA_ATR3, .offset = 0x18},
+    {.name = "mua_arr0", .enable = LOG_MUA_ARR0, .offset = 0x20},
+    {.name = "mua_arr1", .enable = LOG_MUA_ARR1, .offset = 0x28},
+    {.name = "mua_arr2", .enable = LOG_MUA_ARR2, .offset = 0x30},
+    {.name = "mua_arr3", .enable = LOG_MUA_ARR3, .offset = 0x38},
+    {.name = "mua_asr", .enable = LOG_MUA_ASR, .offset = 0x3c},
+    {.name = "mua_acr", .enable = LOG_MUA_ACR, .offset = 0x40},
 };
 
 struct adsp_log *log_init(const char *log_name)

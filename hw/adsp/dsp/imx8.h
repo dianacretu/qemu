@@ -90,12 +90,12 @@
 
 struct adsp_dev;
 
-void adsp_imx8_shim_init(struct adsp_dev *adsp, MemoryRegion *parent,
+void adsp_imx8_mu_init(struct adsp_dev *adsp, MemoryRegion *parent,
         struct adsp_io_info *info);
-void adsp_imx8_shim_msg(struct adsp_dev *adsp, struct qemu_io_msg *msg);
+void adsp_imx8_mu_msg(struct adsp_dev *adsp, struct qemu_io_msg *msg);
 void adsp_imx8_irq_msg(struct adsp_dev *adsp, struct qemu_io_msg *msg);
 void imx8_ext_timer_cb(void *opaque);
-extern const MemoryRegionOps imx8_shim_ops;
+extern const MemoryRegionOps imx8_mu_ops;
 extern const MemoryRegionOps adsp_mbox_ops;
 
 #endif

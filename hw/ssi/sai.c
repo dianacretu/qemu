@@ -30,10 +30,11 @@
 #include "hw/adsp/log.h"
 #include "hw/ssi/ssp.h"
 #include "hw/ssi/sai.h"
+#include "hw/adsp/imx8.h"
 
-const struct adsp_reg_desc adsp_sai_map[ADSP_SSP_REGS] = {
-    {.name = "sai", .enable = LOG_SSP,
-        .offset = 0x00000000, .size = 0x4000},
+const struct adsp_reg_desc adsp_sai_map[ADSP_SAI_REGS] = {
+    {.name = "sai", .enable = LOG_SAI,
+        .offset = 0x00000000, .size = ADSP_IMX8_SAI_1_SIZE},
 };
 
 static void sai_reset(void *opaque)
@@ -65,7 +66,7 @@ static void sai_write(void *opaque, hwaddr addr,
     struct adsp_sai *sai = info->private;
     uint32_t set, clear;
 
-    log_write(ssp->log, space, addr, val, size,
+    log_write(sai->log, space, addr, val, size,
         info->region[addr >> 2]);
 
     switch (addr) {
@@ -79,10 +80,10 @@ static void sai_write(void *opaque, hwaddr addr,
         if (set & SSCR1_TSRE) {
 
             /* create filename */
-            sprintf(ssp->tx.file_name, "/tmp/%s-play%d.wav",
-                ssp->name, ssp->tx.index++);
+            sprintf(sai->tx.file_name, "/tmp/%s-play%d.wav",
+                sai->name, sai->tx.index++);
 
-            unlink(ssp->tx.file_name);
+            unlink(sai->tx.file_name);
             sai->tx.fd = open(sai->tx.file_name, O_WRONLY | O_CREAT,
                 S_IRUSR | S_IWUSR | S_IXUSR);
 

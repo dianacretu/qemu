@@ -163,7 +163,6 @@ static int sof_module_memcpy(struct adsp_dev *adsp,
 
 		switch (block->type) {
 		case SOF_BLK_IMAGE:
-		case SOF_BLK_CACHE:
 		case SOF_BLK_REGS:
 		case SOF_BLK_SIG:
 		case SOF_BLK_ROM:
@@ -180,6 +179,7 @@ static int sof_module_memcpy(struct adsp_dev *adsp,
 				(void *)block + sizeof(*block), block->size);
 			break;
 		case SOF_BLK_DATA:
+		case SOF_BLK_CACHE:
 			fprintf(stdout, "data: 0x%x size 0x%x\n",
 				board->dram_base + block->offset - board->host_dram_offset,
 				block->size);
@@ -364,6 +364,7 @@ int adsp_load_modules(struct adsp_dev *adsp, void *fw, size_t size)
 	if (ret == 0)
 		return sof_load_modules(adsp, fw, sof_header, size);
 
+	
 	sst_header = (struct snd_sst_fw_header *)fw;
 	ret = sst_check_header(adsp, sst_header, size);
 	if (ret == 0)
