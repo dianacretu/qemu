@@ -39,8 +39,8 @@
 #include "hw/adsp/byt.h"
 #include "hw/adsp/imx8.h"
 #include "hw/ssi/ssp.h"
-//#include "hw/ssi/sai.h"
-//#include "hw/ssi/esai.h"
+#include "hw/ssi/sai.h"
+#include "hw/ssi/esai.h"
 #include "hw/dma/dw-dma.h"
 #include "mbox.h"
 #include "imx8.h"
@@ -224,7 +224,6 @@ static struct adsp_reg_space imx8_io[] = {
         .reg = adsp_gp_dma_map, .irq = IRQ_NUM_EXT_DMAC0,
         .init = &dw_dma_init_dev, .ops = &dw_dmac_ops,
         .desc = {.base = ADSP_IMX8_DMA0_BASE, .size = ADSP_IMX8_DMA0_SIZE},},
-#if 0
    { .name = "esai0", .reg_count = ARRAY_SIZE(adsp_esai_map),
         .reg = adsp_esai_map, .irq = IRQ_NUM_EXT_SSP0,
         .init = &adsp_esai_init, .ops = &esai_ops,
@@ -249,10 +248,9 @@ static struct adsp_reg_space imx8_io[] = {
         .reg = adsp_sai_map, .irq = IRQ_NUM_EXT_SSP2,
         .init = &adsp_sai_init, .ops = &sai_ops,
         .desc = {.base = ADSP_IMX8_SAI_1_BASE, .size = ADSP_IMX8_SAI_1_SIZE},},
-#endif
     { .name = "mu", .reg_count = ARRAY_SIZE(adsp_imx8_mu_map),
         .reg = adsp_imx8_mu_map, .init = &adsp_imx8_mu_init, .ops = &imx8_mu_ops,
-        .desc = {.base = ADSP_IMX8_DSP_SHIM_BASE, .size = ADSP_IMX8_SHIM_SIZE},},
+        .desc = {.base = ADSP_IMX8_DSP_MU_BASE, .size = ADSP_IMX8_SHIM_SIZE},},
     { .name = "mbox", .reg_count = ARRAY_SIZE(adsp_imx8_mbox_map),
         .reg = adsp_imx8_mbox_map, .ops = &mbox_io_ops,
         .desc = {.base = ADSP_IMX8_DSP_MAILBOX_BASE, .size = ADSP_IMX8_DSP_MAILBOX_SIZE},},

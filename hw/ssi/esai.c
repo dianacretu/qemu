@@ -99,7 +99,7 @@ static void esai_write(void *opaque, hwaddr addr,
         }
 
         /* close file if playback has finished */
-        if (clear & ESAI_xCR_TE(1))) {
+        if (clear & ESAI_xCR_TE(1)) {
             printf("%s closed %s for playback at %d frames\n",
                 esai->name,
                 esai->tx.file_name, esai->tx.total_frames);
@@ -107,7 +107,7 @@ static void esai_write(void *opaque, hwaddr addr,
             esai->tx.fd = 0;
         }
 	
-    	case REG_ESAI_RCR:
+    	//case REG_ESAI_RCR:
         /* open file if capture has been enabled */
         if (set & SSCR1_RSRE) {
 
@@ -155,12 +155,12 @@ const MemoryRegionOps esai_ops = {
     .endianness = DEVICE_NATIVE_ENDIAN,
 };
 
-#define MAX_SSP     6
-struct adsp_esai *_esai[MAX_SSP] = {NULL, NULL, NULL, NULL, NULL, NULL};
+#define MAX_ESAI     1
+struct adsp_esai *_esai[MAX_ESAI] = {NULL};
 
 struct adsp_esai *esai_get_port(int port)
 {
-    if (port >= 0  && port < MAX_SSP)
+    if (port >= 0  && port < MAX_ESAI)
         return _esai[port];
 
     // TODO find an alternative

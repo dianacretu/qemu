@@ -154,12 +154,12 @@ const MemoryRegionOps sai_ops = {
     .endianness = DEVICE_NATIVE_ENDIAN,
 };
 
-#define MAX_SSP     6
-struct adsp_sai *_sai[MAX_SSP] = {NULL, NULL, NULL, NULL, NULL, NULL};
+#define MAX_SAI     5
+struct adsp_sai *_sai[MAX_SAI] = {NULL, NULL, NULL, NULL, NULL};
 
 struct adsp_sai *sai_get_port(int port)
 {
-    if (port >= 0  && port < MAX_SSP)
+    if (port >= 0  && port < MAX_SAI)
         return _sai[port];
 
     // TODO find an alternative
