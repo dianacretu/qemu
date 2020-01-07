@@ -37,8 +37,8 @@
 #include "hw/adsp/log.h"
 #include "hw/ssi/ssp.h"
 #include "hw/dma/hda-dma.h"
-//#include "hw/ssi/esai.h"
-//#include "hw/ssi/sai.h"
+#include "hw/ssi/esai.h"
+#include "hw/ssi/sai.h"
 
 static void hda_dsp_do_irq(struct adsp_hda_dmac *dmac, int enable, uint32_t mask)
 {

@@ -37,7 +37,8 @@
 #include "hw/adsp/log.h"
 #include "hw/ssi/ssp.h"
 #include "hw/dma/dw-dma.h"
-
+#include "hw/ssi/esai.h"
+#include "hw/ssi/sai.h"
 
 const struct adsp_reg_desc adsp_gp_dma_map[] = {
     {.name = "dma", .enable = LOG_DMA,

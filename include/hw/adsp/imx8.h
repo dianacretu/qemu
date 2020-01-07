@@ -82,6 +82,10 @@
 #define ADSP_IMX8_DMA1_SIZE          0x00001000
 #define ADSP_IMX8_DMA2_SIZE          0x00001000
 
+#define ADSP_IMX8_EDMA0_BASE         0x59200000
+#define ADSP_IMX8_EDMA0_SIZE         0x10000
+
+
 #define ADSP_IMX8_SSP0_BASE          0xFF2A0000
 #define ADSP_IMX8_SSP1_BASE          0xFF2A1000
 #define ADSP_IMX8_SSP2_BASE          0xFF2A2000

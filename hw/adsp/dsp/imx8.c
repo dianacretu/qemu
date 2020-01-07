@@ -42,6 +42,7 @@
 #include "hw/ssi/sai.h"
 #include "hw/ssi/esai.h"
 #include "hw/dma/dw-dma.h"
+#include "hw/dma/edma.h"
 #include "mbox.h"
 #include "imx8.h"
 #include "common.h"
@@ -220,10 +221,12 @@ static struct adsp_mem_desc imx8_mem[] = {
 
 
 static struct adsp_reg_space imx8_io[] = {
-    { .name = "dmac0", .reg_count = ARRAY_SIZE(adsp_gp_dma_map),
-        .reg = adsp_gp_dma_map, .irq = IRQ_NUM_EXT_DMAC0,
-        .init = &dw_dma_init_dev, .ops = &dw_dmac_ops,
-        .desc = {.base = ADSP_IMX8_DMA0_BASE, .size = ADSP_IMX8_DMA0_SIZE},},
+#if 1
+    { .name = "edma0", .reg_count = ARRAY_SIZE(adsp_edma_map),
+        .reg = adsp_edma_map, .irq = IRQ_NUM_EXT_DMAC0,
+        .init = &edma_init_dev, .ops = &edma_ops,
+        .desc = {.base = ADSP_IMX8_EDMA0_BASE, .size = ADSP_IMX8_EDMA0_SIZE},},
+#endif
    { .name = "esai0", .reg_count = ARRAY_SIZE(adsp_esai_map),
         .reg = adsp_esai_map, .irq = IRQ_NUM_EXT_SSP0,
         .init = &adsp_esai_init, .ops = &esai_ops,
