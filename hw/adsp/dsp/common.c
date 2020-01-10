@@ -64,6 +64,8 @@ void adsp_set_lvl1_irq(struct adsp_dev *adsp, int irq, int active)
  * Block header is used to determine where and how block is to be copied in the
  * DSP/host memory space.
  */
+
+#if 0
 enum snd_sof_fw_blk_type {
 	SOF_BLK_IMAGE	= 0,	/* whole image - parsed by ROMs */
 	SOF_BLK_TEXT	= 1,
@@ -74,6 +76,30 @@ enum snd_sof_fw_blk_type {
 	SOF_BLK_ROM	= 6,
 	/* add new block types here */
 };
+#endif
+
+enum snd_sof_fw_blk_type {
+      SOF_FW_BLK_TYPE_INVALID = -1,
+      SOF_FW_BLK_TYPE_START   = 0,
+      SOF_FW_BLK_TYPE_RSRVD0  = SOF_FW_BLK_TYPE_START,
+      SOF_FW_BLK_TYPE_IRAM    = 1,   /* local instruction RAM */
+      SOF_FW_BLK_TYPE_DRAM    = 2,   /* local data RAM */
+      SOF_FW_BLK_TYPE_SRAM    = 3,   /* system RAM */
+      SOF_FW_BLK_TYPE_ROM     = 4,
+      SOF_FW_BLK_TYPE_IMR     = 5,
+      SOF_FW_BLK_TYPE_RSRVD6  = 6,
+      SOF_FW_BLK_TYPE_RSRVD7  = 7,
+      SOF_FW_BLK_TYPE_RSRVD8  = 8,
+      SOF_FW_BLK_TYPE_RSRVD9  = 9,
+      SOF_FW_BLK_TYPE_RSRVD10 = 10,
+      SOF_FW_BLK_TYPE_RSRVD11 = 11,
+      SOF_FW_BLK_TYPE_RSRVD12 = 12,
+      SOF_FW_BLK_TYPE_RSRVD13 = 13,
+      SOF_FW_BLK_TYPE_RSRVD14 = 14,
+      /* use SOF_FW_BLK_TYPE_RSVRDX for new block types */
+      SOF_FW_BLK_TYPE_NUM
+};
+
 
 struct snd_sof_blk_hdr {
 	enum snd_sof_fw_blk_type type;
@@ -162,12 +188,12 @@ static int sof_module_memcpy(struct adsp_dev *adsp,
 		}
 
 		switch (block->type) {
-		case SOF_BLK_IMAGE:
-		case SOF_BLK_REGS:
-		case SOF_BLK_SIG:
-		case SOF_BLK_ROM:
+		case SOF_FW_BLK_TYPE_START:
+		case SOF_FW_BLK_TYPE_ROM:
+		case SOF_FW_BLK_TYPE_IMR:
+		case SOF_FW_BLK_TYPE_RSRVD6:
 			continue;	/* not handled atm */
-		case SOF_BLK_TEXT:
+		case SOF_FW_BLK_TYPE_IRAM:
 			fprintf(stdout, "text: 0x%x size 0x%x\n",
 				board->iram_base + block->offset - board->host_iram_offset,
 				block->size);
@@ -178,8 +204,8 @@ static int sof_module_memcpy(struct adsp_dev *adsp,
 			memcpy(mem->ptr + block->offset - board->host_iram_offset,
 				(void *)block + sizeof(*block), block->size);
 			break;
-		case SOF_BLK_DATA:
-		case SOF_BLK_CACHE:
+		case SOF_FW_BLK_TYPE_DRAM:
+		case SOF_FW_BLK_TYPE_SRAM:
 			fprintf(stdout, "data: 0x%x size 0x%x\n",
 				board->dram_base + block->offset - board->host_dram_offset,
 				block->size);

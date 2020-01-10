@@ -113,6 +113,8 @@
 #define LOG_DMA_M2P		1
 #define LOG_DMA_IRQ		1
 
+#define LOG_EDMA        1
+
 /* MSG Q logging */
 #define LOG_MSGQ		1
 

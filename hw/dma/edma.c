@@ -36,7 +36,7 @@
 
 
 const struct adsp_reg_desc adsp_edma_map[] = {
-    {.name = "dma", .enable = LOG_DMA,
+    {.name = "edma", .enable = LOG_EDMA,
         .offset = 0x00000000, .size = 0x4000},
 };
 
@@ -66,6 +66,7 @@ const MemoryRegionOps edma_ops = {
     .write = edma_write,
     .endianness = DEVICE_NATIVE_ENDIAN,
 };
+
 void edma_init_dev(struct adsp_dev *adsp, MemoryRegion *parent,
         struct adsp_io_info *info)
 {
